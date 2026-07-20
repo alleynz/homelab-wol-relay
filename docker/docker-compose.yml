@@ -7,4 +7,5 @@ services:
     restart: unless-stopped
 
     volumes:
-      - ../config:/config:ro
+      # Change the left-hand path to wherever you keep your config
+      - ./config:/config:ro
