@@ -1,89 +1,172 @@
-# WoL Relay
+# Homelab WoL Relay
 
-A small Wake-on-LAN relay for Guacamole and segmented networks.
+A lightweight Wake-on-LAN relay written in Go.
 
-It listens for broadcast WoL packets, validates the magic packet, extracts the target MAC address, looks up a static MAC-to-IP mapping, and sends a new unicast WoL packet to the configured device.
+The relay listens for broadcast Wake-on-LAN (WoL) magic packets, extracts the target MAC address, and retransmits the packet as a **unicast** WoL packet to a configured IP address.
 
-## GitHub Container Registry
+This solves a common problem where applications (such as Apache Guacamole) only send broadcast WoL packets, which cannot cross routed networks or VLANs.
 
-The included GitHub Actions workflow runs tests and publishes multi-architecture images for `linux/amd64` and `linux/arm64` to:
+---
 
-```text
-ghcr.io/alleynz/homelab-wol-relay:latest
+## Features
+
+- Lightweight Go application
+- Listens for broadcast WoL packets
+- Retransmits WoL packets as unicast
+- JSON configuration
+- Docker support
+- Multi-platform container image (planned)
+
+---
+
+## Project Status
+
+This project is currently under active development.
+
+Current goals:
+
+- Broadcast WoL listener
+- MAC address extraction
+- Static MAC → IP mapping
+- Unicast WoL transmission
+- Docker image publishing
+
+---
+
+## Repository
+
+```
+https://github.com/alleynz/homelab-wol-relay
 ```
 
-The image is rebuilt whenever code is pushed to `main`. Version tags such as `v0.1.0` also publish a matching container tag.
+---
 
-After the first successful workflow, open the package in GitHub and make it public if anonymous pulls are desired.
+## Configuration
 
-## Persistent configuration
+Create a directory for your configuration.
 
-Create a persistent directory on the Docker host:
+For example:
 
-```sh
-sudo mkdir -p /opt/wol-relay/config
-sudo nano /opt/wol-relay/config/config.json
+```bash
+mkdir -p ./config
 ```
+
+or
+
+```bash
+mkdir -p ~/docker/wol-relay/config
+```
+
+or
+
+```bash
+sudo mkdir -p /srv/wol-relay/config
+```
+
+Copy the example configuration:
+
+```bash
+cp config/config.example.json ./config/config.json
+```
+
+The application looks for:
+
+```
+/config/config.json
+```
+
+inside the container.
+
+---
+
+## Docker
+
+An example Docker Compose file is provided in:
+
+```
+docker/docker-compose.yml
+```
+
+Adjust the volume path on the left-hand side to wherever you store your configuration.
 
 Example:
 
-```json
-{
-  "listen": "0.0.0.0",
-  "port": 9,
-  "devices": [
-    {
-      "name": "Windows PC",
-      "mac": "62:00:00:9c:72:6e",
-      "ip": "192.168.1.20"
-    }
-  ]
-}
+```yaml
+services:
+  wol-relay:
+    image: ghcr.io/alleynz/homelab-wol-relay:latest
+    container_name: wol-relay
+    restart: unless-stopped
+
+    volumes:
+      - ./config:/config:ro
 ```
 
-The configuration is stored outside the container and survives updates, restarts, and recreation.
+The relay does not require any particular Docker network.
 
-## Deployment
+If you need to receive WoL packets from another container (for example Apache Guacamole), simply deploy both containers onto the same Docker network.
 
-Use `docker/docker-cosmos.yml`
+---
 
-The relay must share the same docker network with Guacamole so it can receive Guacamole's UDP broadcast.
+## Building
 
-After editing the configuration, restart the container in Cosmos.
+Clone the repository:
 
-## Logs
-
-```sh
-docker logs -f wol-relay
+```bash
+git clone https://github.com/alleynz/homelab-wol-relay.git
+cd homelab-wol-relay
 ```
 
-Expected startup:
+Build:
 
-```text
-WoL relay listening on 0.0.0.0:9 with 1 configured device(s)
+```bash
+go build ./cmd/wol-relay
 ```
 
-Expected relay event:
+Run:
 
-```text
-relayed WoL for Windows PC to 192.168.1.20:9
+```bash
+./wol-relay --config ./config/config.json
 ```
 
-## Packet verification
+---
 
-```sh
-sudo tcpdump -ni any 'udp port 9' -nn -vv -X
+## Docker Build
+
+```bash
+docker build -t homelab-wol-relay .
 ```
 
-You should see Guacamole's broadcast followed by the relay's unicast packet.
+Run:
 
-## Local development
-
-```sh
-go test ./...
-docker compose up -d --build
+```bash
+docker run \
+  -v ./config:/config:ro \
+  ghcr.io/alleynz/homelab-wol-relay:latest
 ```
 
-## Future web GUI
+---
 
-Configuration, packet parsing, and packet delivery are separate packages so an HTTP API and web GUI can be added without replacing the relay engine.
+## Roadmap
+
+- [ ] Broadcast WoL listener
+- [ ] MAC address extraction
+- [ ] Static MAC → IP mapping
+- [ ] Unicast WoL transmission
+- [ ] Logging
+- [ ] Configuration validation
+- [ ] Unit tests
+- [ ] GitHub Actions
+- [ ] Multi-architecture Docker images
+
+---
+
+## Contributing
+
+Issues and pull requests are welcome.
+
+---
+
+## License
+
+MIT License
