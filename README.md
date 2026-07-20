@@ -43,9 +43,9 @@ Example:
 
 The configuration is stored outside the container and survives updates, restarts, and recreation.
 
-## Cosmos deployment
+## Deployment
 
-Use `compose.cosmos.yml` in Cosmos and replace:
+Use `docker/docker-cosmos.yml`
 
 ```text
 ghcr.io/YOUR_GITHUB_USERNAME/wol-relay:latest
@@ -53,7 +53,7 @@ ghcr.io/YOUR_GITHUB_USERNAME/wol-relay:latest
 
 with the image shown on the GitHub package page.
 
-The relay must share `cosmos-app-default` with Guacamole so it can receive Guacamole's UDP broadcast.
+The relay must share the same docker network with Guacamole so it can receive Guacamole's UDP broadcast.
 
 After editing the configuration, restart the container in Cosmos.
 
