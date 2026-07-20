@@ -9,7 +9,7 @@ It listens for broadcast WoL packets, validates the magic packet, extracts the t
 The included GitHub Actions workflow runs tests and publishes multi-architecture images for `linux/amd64` and `linux/arm64` to:
 
 ```text
-ghcr.io/<github-user-or-org>/<repository>:latest
+ghcr.io/alleynz/homelab-wol-relay:latest
 ```
 
 The image is rebuilt whenever code is pushed to `main`. Version tags such as `v0.1.0` also publish a matching container tag.
