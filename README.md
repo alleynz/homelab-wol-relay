@@ -95,7 +95,7 @@ Example:
 services:
   wol-relay:
     image: ghcr.io/alleynz/homelab-wol-relay:latest
-    container_name: wol-relay
+    container_name: homelab-wol-relay
     restart: unless-stopped
 
     volumes:
