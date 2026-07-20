@@ -1,1 +1,16 @@
+services:
+  wol-relay:
+    image: ghcr.io/alleynz/homelab-wol-relay:latest
+    container_name: wol-relay
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /opt/wol-relay/config
+        target: /config
+        read_only: true
+    networks:
+      - cosmos-app-default
 
+networks:
+  cosmos-app-default:
+    external: true
