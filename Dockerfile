@@ -12,5 +12,5 @@ LABEL org.opencontainers.image.title="wol-relay" \
 RUN addgroup -S app && adduser -S -G app app
 COPY --from=build /out/wol-relay /usr/local/bin/wol-relay
 USER app
-ENTRYPOINT ["/usr/local/bin/wol-relay"]
-CMD ["-config", "/config/config.json"]
+ENTRYPOINT ["/app/wol-relay"]
+CMD ["--config", "/config/config.json"]
