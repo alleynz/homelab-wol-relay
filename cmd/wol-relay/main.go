@@ -9,8 +9,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/example/homelab-wol-relay/internal/config"
-	"github.com/example/homelab-wol-relay/internal/wol"
+	"github.com/alleynz/homelab-wol-relay/internal/config"
+	"github.com/alleynz/homelab-wol-relay/internal/wol"
 )
 
 func main() {
