@@ -1,0 +1,14 @@
+services:
+  wol-relay:
+    build: .
+    image: local/wol-relay:0.1.0
+    container_name: wol-relay
+    restart: unless-stopped
+    volumes:
+      - ./config:/config:ro
+    networks:
+      - cosmos-app-default
+
+networks:
+  cosmos-app-default:
+    external: true
