@@ -1,6 +1,6 @@
 services:
   wol-relay:
-    image: ghcr.io/YOUR_GITHUB_USERNAME/wol-relay:latest
+    image: ghcr.io/alleynz/homelab-wol-relay:latest
     container_name: wol-relay
     restart: unless-stopped
     volumes:
